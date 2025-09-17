@@ -1,4 +1,5 @@
 const CLIENT_ID = "ТВОЙ_CLIENT_ID_ЗДЕСЬ"; // ← Вставь свой client_id
+const CLIENT_SECRET = "ТВОЙ_CLIENT_SECRET_ЗДЕСЬ"; // ← Вставь свой CLIENT_SECRET
 const REDIRECT_URI = "https://ТВОЙ_САЙТ.render.com/auth/avito/callback"; // ← Позже поменяешь
 
 document.getElementById("connectAvito").onclick = function() {
@@ -39,4 +40,5 @@ document.getElementById("uploadButton").onclick = function() {
     .catch(err => {
         document.getElementById("status").innerText = "Ошибка: " + err.message;
     });
+
 };

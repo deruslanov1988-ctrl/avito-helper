@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Загрузчик объявлений для Авито</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { margin: 10px; padding: 10px; }
+        hr { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Подключите свой аккаунт Авито</h1>
+    <button id="connectAvito">Подключить Авито</button>
+    <hr>
+    <h2>Создать файл для загрузки</h2>
+    <button id="generateFile">Сгенерировать Excel-файл</button>
+    <a id="downloadLink" style="display:none">Скачать файл</a>
+    <hr>
+    <h2>Загрузить файл в Авито</h2>
+    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+    <button id="uploadButton">Загрузить в Авито</button>
+    <p id="status"></p>
+
+    <script src="script.js"></script>
+</body>
+</html>

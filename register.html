@@ -35,15 +35,26 @@
     </div>
 
     <script>
-        document.getElementById("registerForm").onsubmit = function(e) {
-            e.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+    document.getElementById("registerForm").onsubmit = async function(e) {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-            // Пока просто показываем сообщение — позже подключим базу
-            localStorage.setItem("user_" + email, password);
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
             document.getElementById("registerMessage").innerHTML = '<div class="alert alert-success">Регистрация успешна! <a href="login.html">Войдите</a></div>';
-        };
-    </script>
+        } else {
+            document.getElementById("registerMessage").innerHTML = `<div class="alert alert-danger">${result.error}</div>`;
+        }
+    };
+</script>
 </body>
+
 </html>

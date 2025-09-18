@@ -24,10 +24,23 @@ app.post('/api/register', async (req, res) => {
 
     try {
         await client.connect();
+        
+        // Проверка: уже ли есть такой email
+        const checkResult = await client.query(
+            'SELECT * FROM users WHERE email = $1',
+            [email]
+        );
+
+        if (checkResult.rows.length > 0) {
+            return res.status(409).json({ error: "Пользователь с таким email уже существует" });
+        }
+
+        // Если нет — создаём нового пользователя
         const result = await client.query(
             'INSERT INTO users (email, password) VALUES ($1, $2)',
             [email, password]
         );
+
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -67,6 +80,7 @@ app.get('/register.html', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
+
 
 
 

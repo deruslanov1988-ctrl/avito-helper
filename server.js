@@ -15,7 +15,10 @@ app.get('/', (req, res) => {
 });
 
 // ... остальной код (OAuth, загрузка файла) оставь без изменений
-
+app.get('/register.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'register.html'));
+});
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
+

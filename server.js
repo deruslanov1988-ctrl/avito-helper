@@ -8,6 +8,8 @@ const PORT = process.env.PORT || 10000;
 
 // Отдавать статические файлы из корня
 app.use(express.static('.'));
+app.use(express.json()); // ← ЭТО ОБЯЗАТЕЛЬНО!
+
 // Подключение к базе данных
 require('dotenv').config();
 const { Client } = require('pg');
@@ -65,5 +67,6 @@ app.get('/register.html', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
+
 
 

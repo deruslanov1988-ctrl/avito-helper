@@ -63,7 +63,12 @@
             </div>
         </div>
     </div>
-
+<script>
+    document.getElementById("logoutButton").onclick = function() {
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "login.html";
+    };
+</script>
 <script>
     if (!localStorage.getItem("isLoggedIn")) {
         window.location.href = "login.html";
@@ -71,5 +76,6 @@
 </script>
 </body>
 </html>
+
 
 

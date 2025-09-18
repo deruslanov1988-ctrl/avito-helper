@@ -64,6 +64,12 @@
         </div>
     </div>
 <script>
+    // Проверяем, залогинен ли пользователь
+    if (!localStorage.getItem("isLoggedIn")) {
+        window.location.href = "login.html";
+    }
+
+    // Добавляем обработчик для кнопки "Выйти"
     document.getElementById("logoutButton").onclick = function() {
         localStorage.removeItem("isLoggedIn");
         window.location.href = "login.html";
@@ -76,6 +82,7 @@
 </script>
 </body>
 </html>
+
 
 
 

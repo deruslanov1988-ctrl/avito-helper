@@ -4,14 +4,7 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const { Client } = require('pg');
 const FormData = require('form-data');
-const dns = require('dns'); // ← добавляем модуль dns
 require('dotenv').config();
-
-// ======= Проверка IPv4 для Supabase =======
-dns.lookup(process.env.DB_HOST, { family: 4 }, (err, address) => {
-    if (err) console.error('DNS Lookup IPv4 ERROR:', err);
-    else console.log('✅ IPv4 address для Supabase:', address);
-});
 
 const app = express();
 const PORT = process.env.PORT || 10000;
@@ -22,27 +15,23 @@ let client;
 async function getConnection() {
     if (!client) {
         client = new Client({
-            user: process.env.DB_USER,
-            host: process.env.DB_HOST,
-            database: process.env.DB_NAME,
-            password: process.env.DB_PASSWORD,
-            port: process.env.DB_PORT || 5432,
-            ssl: { rejectUnauthorized: false },
-            connectionTimeoutMillis: 10000,
-            family: 4  // принудительно IPv4 для Render/Supabase
+            connectionString: process.env.DATABASE_URL, // ← Используем одну переменную
+            ssl: {
+                rejectUnauthorized: true // Neon требует валидный SSL
+            },
+            connectionTimeoutMillis: 10000
         });
 
         try {
             await client.connect();
-            console.log("✅ Подключено к Supabase");
+            console.log("✅ Подключено к базе данных Neon.tech");
         } catch (err) {
             console.error("❌ Ошибка подключения к базе:", err);
-            throw err; // чтобы сервер не работал без подключения
+            throw err;
         }
     }
     return client;
 }
-
 
 // Middleware
 app.use(express.static('.'));
@@ -65,7 +54,7 @@ app.get('/register.html', (req, res) => {
 
 // API: Регистрация
 app.post('/api/register', async (req, res) => {
-    console.log("💡 req.body:", req.body); // Добавляем лог для отладки
+    console.log("💡 req.body:", req.body);
     const { email, password } = req.body;
 
     try {
@@ -89,7 +78,7 @@ app.post('/api/register', async (req, res) => {
         console.log("✅ Пользователь зарегистрирован:", email);
         res.json({ success: true });
     } catch (error) {
-        console.error("❌ Ошибка регистрации:", error); // Показываем всю ошибку
+        console.error("❌ Ошибка регистрации:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -128,8 +117,7 @@ app.get('/auth/avito/callback', async (req, res) => {
     const code = req.query.code;
 
     try {
-        // ✅ ИСПРАВЛЕНО: убран пробел в конце URL
-        const tokenResponse = await axios.post('https://oauth.avito.ru/token', {
+        const tokenResponse = await axios.post('https://oauth.avito.ru/token', { // ← УБРАЛ ЛИШНИЙ ПРОБЕЛ
             grant_type: 'authorization_code',
             client_id: process.env.CLIENT_ID,
             client_secret: process.env.CLIENT_SECRET,
@@ -166,8 +154,7 @@ app.post('/api/upload', async (req, res) => {
         const formData = new FormData();
         formData.append('file', file.data, file.name);
 
-        // ✅ ИСПРАВЛЕНО: убран пробел в конце URL
-        const uploadResponse = await axios.post('https://api.avito.ru/core/v1/items/upload', formData, {
+        const uploadResponse = await axios.post('https://api.avito.ru/core/v1/items/upload', { // ← УБРАЛ ЛИШНИЙ ПРОБЕЛ
             headers: {
                 ...formData.getHeaders(),
                 'Authorization': `Bearer ${accessToken}`
@@ -185,9 +172,3 @@ app.post('/api/upload', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
 });
-
-
-
-
-
-

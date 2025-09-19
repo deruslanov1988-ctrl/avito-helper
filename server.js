@@ -23,7 +23,7 @@ async function getConnection() {
             port: process.env.DB_PORT || 5432,
             ssl: { rejectUnauthorized: false },
             connectionTimeoutMillis: 10000,
-            family: 4
+            family: 4  // ← эта строка заставляет использовать IPv4
         });
 
         await client.connect();
@@ -173,6 +173,7 @@ app.post('/api/upload', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
 });
+
 
 
 

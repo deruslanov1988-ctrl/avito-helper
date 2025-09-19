@@ -16,7 +16,7 @@ let client;
 async function getConnection() {
     if (!client) {
         client = new Client({
-            connectionString: process.env.SUPABASE_URL,
+            connectionString: process.env.DATABASE_URL,
             ssl: true
         });
         await client.connect();
@@ -166,3 +166,4 @@ app.post('/api/upload', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
 });
+

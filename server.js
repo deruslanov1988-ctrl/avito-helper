@@ -16,9 +16,16 @@ let client;
 async function getConnection() {
     if (!client) {
         client = new Client({
-            connectionString: process.env.DATABASE_URL,
-            ssl: true
+            user: process.env.DB_USER,
+            host: process.env.DB_HOST,
+            database: process.env.DB_NAME,
+            password: process.env.DB_PASSWORD,
+            port: process.env.DB_PORT || 5432,
+            ssl: { rejectUnauthorized: false },
+            connectionTimeoutMillis: 10000,
+            family: 4
         });
+
         await client.connect();
         console.log("✅ Подключено к Supabase");
     }
@@ -166,4 +173,5 @@ app.post('/api/upload', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
 });
+
 

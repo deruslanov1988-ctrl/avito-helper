@@ -3,11 +3,17 @@ const axios = require('axios');
 const fileUpload = require('express-fileupload');
 const path = require('path');
 const { Client } = require('pg');
-const FormData = require('form-data'); // ← ДОБАВЬ ЭТУ СТРОКУ!
+const FormData = require('form-data');
+const dns = require('dns'); // ← добавляем модуль dns
 require('dotenv').config();
 
-const app = express();
+// ======= Проверка IPv4 для Supabase =======
+dns.lookup(process.env.DB_HOST, { family: 4 }, (err, address) => {
+    if (err) console.error('DNS Lookup IPv4 ERROR:', err);
+    else console.log('✅ IPv4 address для Supabase:', address);
+});
 
+const app = express();
 const PORT = process.env.PORT || 10000;
 
 // Подключение к базе данных (ленивая инициализация)
@@ -179,6 +185,7 @@ app.post('/api/upload', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
 });
+
 
 
 

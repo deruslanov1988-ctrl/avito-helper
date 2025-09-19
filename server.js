@@ -3,9 +3,10 @@ const axios = require('axios');
 const fileUpload = require('express-fileupload');
 const path = require('path');
 const { Client } = require('pg');
+const FormData = require('form-data'); // ← ДОБАВЬ ЭТУ СТРОКУ!
 require('dotenv').config();
 
-const app = express(); // ← ВОТ ЭТА СТРОКА ОБЯЗАТЕЛЬНА
+const app = express();
 
 const PORT = process.env.PORT || 10000;
 
@@ -103,8 +104,6 @@ app.post('/api/logout', (req, res) => {
     res.json({ success: true });
 });
 
-// ... остальной код
-
 // OAuth2: Подключение Авито
 app.get('/auth/avito/callback', async (req, res) => {
     const code = req.query.code;
@@ -163,3 +162,7 @@ app.post('/api/upload', async (req, res) => {
     }
 });
 
+// Запуск сервера
+app.listen(PORT, () => {
+    console.log(`🚀 Сервер запущен на порту ${PORT}`);
+});

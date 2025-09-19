@@ -53,22 +53,22 @@ app.get('/register.html', (req, res) => {
 
 // API: Регистрация
 app.post('/api/register', async (req, res) => {
+    console.log("💡 req.body:", req.body); // Добавляем лог для отладки
     const { email, password } = req.body;
 
     try {
         const dbClient = await getConnection();
 
-        // Проверка дубликата
         const checkResult = await dbClient.query(
             'SELECT * FROM users WHERE email = $1',
             [email]
         );
 
         if (checkResult.rows.length > 0) {
+            console.log("⚠️ Пользователь уже существует:", email);
             return res.status(409).json({ error: "Пользователь с таким email уже существует" });
         }
 
-        // Создание пользователя
         await dbClient.query(
             'INSERT INTO users (email, password) VALUES ($1, $2)',
             [email, password]
@@ -77,7 +77,7 @@ app.post('/api/register', async (req, res) => {
         console.log("✅ Пользователь зарегистрирован:", email);
         res.json({ success: true });
     } catch (error) {
-        console.error("❌ Ошибка регистрации:", error.message);
+        console.error("❌ Ошибка регистрации:", error); // Показываем всю ошибку
         res.status(500).json({ error: error.message });
     }
 });
@@ -173,5 +173,6 @@ app.post('/api/upload', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
 });
+
 
 

@@ -23,14 +23,20 @@ async function getConnection() {
             port: process.env.DB_PORT || 5432,
             ssl: { rejectUnauthorized: false },
             connectionTimeoutMillis: 10000,
-            family: 4  // ← эта строка заставляет использовать IPv4
+            family: 4  // принудительно IPv4 для Render/Supabase
         });
 
-        await client.connect();
-        console.log("✅ Подключено к Supabase");
+        try {
+            await client.connect();
+            console.log("✅ Подключено к Supabase");
+        } catch (err) {
+            console.error("❌ Ошибка подключения к базе:", err);
+            throw err; // чтобы сервер не работал без подключения
+        }
     }
     return client;
 }
+
 
 // Middleware
 app.use(express.static('.'));
@@ -173,6 +179,7 @@ app.post('/api/upload', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
 });
+
 
 
 
